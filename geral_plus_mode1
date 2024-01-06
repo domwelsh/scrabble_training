@@ -39,10 +39,17 @@ def mode_1():
         letters = no_points_generate_letters()
         print("Generated Letters:", ' '.join(letters))
         
-        input("Press Enter to reveal the longest word.")
+        input("Press Enter to reveal the longest words.")
         
-        word = longest_word(letters)
-        print("Longest Word:", word)
+        words = longest_words(letters)
+        if isinstance(words, str):
+            print(words)
+        elif len(words) == 1:
+            print("Longest Word:", words[0])
+        else:
+            print("Longest Words:")
+            for w in words:
+                print(w)
 
 
 # should we have space also? i think it will this complicate the process
@@ -51,19 +58,21 @@ def no_points_generate_letters(amount=7):
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     return random.sample(alphabet, amount)
 
-def longest_word(letters):
+def longest_words(letters):
     english_word_list = set(words.words())
     
     def is_valid(word, available_letters):
         for letter in word:
-            if word.count(letter) > available_letters.count(letter):
+            if (word.count(letter) > available_letters.count(letter)) or len(word) == 1:
                 return False
         return True
 
     valid_words = [word for word in english_word_list if is_valid(word, letters)]
 
     if valid_words:
-        return max(valid_words, key=len)
+        max_len = len(max(valid_words, key=len))
+        max_words = [word for word in valid_words if len(word) == max_len]
+        return max_words
     else:
         return "No valid word found."
 
