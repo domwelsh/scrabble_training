@@ -8,11 +8,11 @@ nltk.download('words')
 from nltk.corpus import words
 
 def main():
-
-    user_choice = 'asndkf;jadskl'
+    print("Welcome to English Scrabble Practice!")
+    user_choice = None
 
     while True:
-        if user_choice == 'asndkf;jadskl':
+        if user_choice == None:
             pass
         elif user_choice == '1':
             mode_1()
@@ -21,7 +21,6 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
-        print("Welcome to English Scrabble Practice!")
         print("Select a mode:")
         print("1. Practice Mode")
         print("2. Quit")
