@@ -1,11 +1,6 @@
-##for mode one, where we get random 7 letters and then it generates the biggest word possible
-##dont forget in terminal: pip install nltk
-
 import random
-import nltk
+import twl
 
-nltk.download('words')
-from nltk.corpus import words
 
 def main():
     print("Welcome to English Scrabble Practice!")
@@ -52,29 +47,23 @@ def mode_1():
                 print(w)
 
 
-# should we have space also? i think it will this complicate the process
-# Dom - Space as in ' '? We should not have that, only want to make entire words
 def no_points_generate_letters(amount=7):
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     return random.sample(alphabet, amount)
 
+
 def longest_words(letters):
-    english_word_list = set(words.words())
-    
-    def is_valid(word, available_letters):
-        for letter in word:
-            if (word.count(letter) > available_letters.count(letter)) or len(word) == 1:
-                return False
-        return True
+    english_word_list = []
+    for word in twl.anagram(letters):
+        english_word_list.append(word)
 
-    valid_words = [word for word in english_word_list if is_valid(word, letters)]
-
-    if valid_words:
-        max_len = len(max(valid_words, key=len))
-        max_words = [word for word in valid_words if len(word) == max_len]
+    if english_word_list:
+        max_len = len(max(english_word_list, key=len))
+        max_words = [word for word in english_word_list if len(word) == max_len]
         return max_words
     else:
         return "No valid word found."
+
 
 if __name__ == "__main__":
     main()
