@@ -57,12 +57,26 @@ def mode_2():
         print("Generated Letters:", ' '.join(letters))
         
         guess = user_input_word(letters)
-        correct_word = longest_words(letters)
+        correct_words = longest_words(letters)
 
-        if len(guess) == len(correct_word) and guess.lower() == correct_word.lower():
-            print("Correct! You found the longest word.")
+        if isinstance(correct_words, str) and guess == "":
+            print(f"Correct. {correct_words}")
+        elif isinstance(correct_words, str) and guess != "":
+            print(f"Incorrect. {correct_words}")
+        elif len(guess) == len(correct_words) and guess.lower() == correct_words.lower():
+            if len(correct_words) == 1:
+                print("Correct! You found the longest word.")
+            else:
+                print("Correct! You found one of the longest words. The other longest words are:")
+                for w in correct_words:
+                    print(w)
         else:
-            print(f"Incorrect. The longest word is: {correct_word}")
+            if len(correct_words) == 1:
+                print(f"Incorrect. The longest word is: {correct_words[0]}")
+            else:
+                print(f"Incorrect. The longest words are:")
+                for w in correct_words:
+                    print(w)
 
 
 def ready_input():
@@ -81,7 +95,7 @@ def reset_tiles():
 
 def user_input_word(letters):
     while True:
-        guess = input("Enter your word: ")
+        guess = input("Enter your word (if no valid words, press Enter with no input): ")
         if is_valid(guess, letters):
             return guess
         else:
