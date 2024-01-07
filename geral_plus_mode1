@@ -12,25 +12,23 @@ def main():
         elif user_choice == '1':
             mode_1()
         elif user_choice == '2':
+            mode_2()
+        elif user_choice == 'q':
             print("Thanks for playing! Goodbye.")
             break
         else:
             print("Invalid choice. Please try again.")
         print("Select a mode:")
-        print("1. Practice Mode")
-        print("2. Quit")
+        print("1. Show all longest words")
+        print("2. Enter your longest word guesses")
+        print("q. Quit")
         user_choice = input("Enter the mode number: ")
 
 
 def mode_1():
     print("Entering Practice Mode 1...")
     while True:
-        ready_input = input("Press Enter when ready to generate letters. "
-                            "The '?' counts as any letter. "
-                            "Enter 'q' to quit: ")
-
-        if ready_input.lower() == 'q':
-            print("Exiting Practice Mode 1...")
+        if ready_input() == 'q':
             break
 
         letters = no_points_generate_letters()
@@ -47,6 +45,47 @@ def mode_1():
             print("Longest Words:")
             for w in words:
                 print(w)
+
+
+def mode_2():
+    print("Entering Practice Mode 2...")
+    while True:
+        if ready_input() == 'q':
+            break
+
+        letters = no_points_generate_letters()
+        print("Generated Letters:", ' '.join(letters))
+        
+        guess = user_input_word(letters)
+        correct_word = longest_words(letters)
+
+        if len(guess) == len(correct_word) and guess.lower() == correct_word.lower():
+            print("Correct! You found the longest word.")
+        else:
+            print(f"Incorrect. The longest word is: {correct_word}")
+
+
+def ready_input():
+    r_input = input("Press Enter when ready to generate letters. "
+                    "The '?' counts as any letter. "
+                    "Enter 'q' to quit: ")
+    if r_input.lower() == 'q':
+        print("Returning to practice mode menu...")
+    return r_input
+        
+
+def reset_tiles():
+    # Additional function to reset the tiles, if needed
+    print("Resetting tiles...")
+
+
+def user_input_word(letters):
+    while True:
+        guess = input("Enter your word: ")
+        if is_valid(guess, letters):
+            return guess
+        else:
+            print("Invalid word. Use only the provided letters.")
 
 
 def no_points_generate_letters(amount=7):
