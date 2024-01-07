@@ -25,7 +25,9 @@ def main():
 def mode_1():
     print("Entering Practice Mode 1...")
     while True:
-        ready_input = input("Press Enter when ready to generate letters. Enter 'q' to quit: ")
+        ready_input = input("Press Enter when ready to generate letters. "
+                            "The '?' counts as any letter. "
+                            "Enter 'q' to quit: ")
 
         if ready_input.lower() == 'q':
             print("Exiting Practice Mode 1...")
@@ -48,7 +50,7 @@ def mode_1():
 
 
 def no_points_generate_letters(amount=7):
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    alphabet = 'abcdefghijklmnopqrstuvwxyz?'
     return random.sample(alphabet, amount)
 
 
