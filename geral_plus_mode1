@@ -94,6 +94,7 @@ def is_valid(word, available_letters):
         if word.count(letter) > available_letters.count(letter):
             if wild_cards > 0:
                 wild_cards -= 1
+                available_letters = available_letters.replace('?', letter, 1)
                 continue
             return False
     return True
@@ -101,7 +102,7 @@ def is_valid(word, available_letters):
 
 def no_points_generate_letters(amount=7):
     alphabet = 'abcdefghijklmnopqrstuvwxyz?'
-    return random.sample(alphabet, amount)
+    return ''.join(random.sample(alphabet, amount))
 
 
 def longest_words(letters):
