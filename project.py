@@ -103,11 +103,11 @@ def user_input_word(letters):
 
 
 def is_valid(word, available_letters):
-    wild_cards = available_letters.count('?')
+    blank_tiles = available_letters.count('?')
     for letter in word:
         if word.count(letter) > available_letters.count(letter):
-            if wild_cards > 0:
-                wild_cards -= 1
+            if blank_tiles > 0:
+                blank_tiles -= 1
                 available_letters = available_letters.replace('?', letter, 1)
                 continue
             return False
