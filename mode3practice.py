@@ -1,6 +1,64 @@
 import random
 import twl
 
+class Tile:
+    def __init__(self, tile_count, points_value):
+        self.letter = letter
+        self.tile_count =  tile_count
+        self.points = points_value
+        self.max_tile_count = tile_count
+        self.reset_tiles()
+
+    def __str__(self):
+        return f"Tile {self.letter}: {self.tile_count} remaining, {self.points} points per tile"
+        
+    def tiles_withdrawn(self):
+        if self.tile_count > 0:
+            self.tile_count -= 1
+    
+    def is_empty(self):
+        return self.tile_count == 0
+
+    def reset_tiles(self):
+        self.tile_count = self.max_tile_count
+    
+
+# data for tiles to generate (tile, tile_count, and point_value)
+tiles_to_generate = [
+    ('a', 9, 1),
+    ('b', 2, 3),
+    ('c', 2, 3),
+    ('d', 4, 2),
+    ('e', 12, 1),
+    ('f', 2, 4),
+    ('g', 3, 2),
+    ('h', 2, 4),
+    ('i', 9, 1),
+    ('j', 1, 8),
+    ('k', 1, 5),
+    ('l', 4, 1),
+    ('m', 2, 3),
+    ('n', 6, 1),
+    ('o', 8, 1),
+    ('p', 2, 3),
+    ('q', 1, 10),
+    ('r', 6, 1),
+    ('s', 4, 1),
+    ('t', 6, 1),
+    ('u', 4, 1),
+    ('v', 2, 4),
+    ('w', 2, 4),
+    ('x', 1, 8),
+    ('y', 2, 4),
+    ('z', 1, 10),
+    ('?', 2, 0)
+]
+
+# Generate instances of Tile based on the data
+tile_instances = [Tile(letter, count, points) for letter, count, points in tiles_to_generate]
+
+# Example usage:
+print(tile_instances[0])  # Output: Tile a: 9 remaining, 1 points each
 
 def main():
     print("Welcome to English Scrabble Practice!")
