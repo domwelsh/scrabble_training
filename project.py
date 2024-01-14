@@ -109,10 +109,16 @@ def user_input_word(letters: str) -> str:
 
     while True:
         guess = input("Enter your word (if no valid words, press Enter with no input): ")
-        if is_valid(guess, letters):
+        if guess == "":
             return guess
         else:
-            print("Invalid word. Use only the provided letters.")
+            if is_valid(guess, letters):
+                if twl.check(guess):
+                    return guess
+                else:
+                    print("Invalid word. Not in the dictionary")
+            else:
+                print("Invalid word. Use only the provided letters.")
 
 
 def is_valid(word: str, available_letters: str) -> bool:
