@@ -168,6 +168,8 @@ def mode_3():
         reset_option = input("Do you want to reset the tiles? (y/n): ")
         if reset_option.lower() == 'y':
             reset_tiles(tile_instances)
+            break
+
 
         # Option to continue or quit
         user_input_continue = input("Enter 'q' to quit, or press Enter to continue: ")
