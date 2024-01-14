@@ -134,7 +134,6 @@ def mode_3():
     ]
 
     tile_instances = [Tile(letter, count, points) for letter, count, points in tiles_to_generate]
-
     while True:
         ready_input = input("Press Enter when ready to generate letters. Enter 'q' to quit: ")
 
@@ -149,16 +148,14 @@ def mode_3():
         # Get user's word guess
         guess = user_input_word(letters_points)
 
+        # Check if the word is valid in English
+        if guess.lower() not in english_word_list(''.join(letter for letter, _ in letters_points)):
+            print("Invalid word. Please use a valid English word.")
+            continue
+
         # Calculate total score for the user's guess
         total_score = calculate_word_score(guess, tile_instances)
         print(f"Score for the word '{guess}': {total_score}")
-
-        # Get the highest scoring word
-        highest_scoring_word, highest_score = highest_point_word(tile_instances)
-        print(f"Highest scoring word: '{highest_scoring_word}' with score: {highest_score}")
-
-        # Compare user's score with the highest score
-        compare_score(highest_score, total_score)
 
         # Option to reset tiles
         reset_option = input("Do you want to reset the tiles? (y/n): ")
@@ -184,18 +181,42 @@ def points_generate_letters(tile_instances, amount=7):
 
     return selected_letters
 
-def highest_point_word(tile_instances):
+def calculate_word_score(word, tile_instances):
+    total_score = 0
+    for letter, _ in word:
+        for tile in tile_instances:
+            if letter == tile.letter:
+                total_score += tile.points
+                break  # Break once you find the matching letter
+    return total_score
+
+
+def points_generate_letters(tile_instances, amount=7):
+    available_letters = [(tile.letter, tile.points) for tile in tile_instances if not tile.is_empty()]
+    selected_letters = random.sample(available_letters, min(amount, len(available_letters)))
+
+    # Withdraw tiles
+    for letter, _ in selected_letters:
+        for tile in tile_instances:
+            if tile.letter == letter:
+                tile.tiles_withdrawn()
+                break
+
+    return selected_letters
+
+def highest_point_word(tile_instances, letters_points):
     max_score = 0
     best_word = ""
 
-    for tile in tile_instances:
-        if not tile.is_empty():
-            current_score = tile.points * tile.tile_count
-            if current_score > max_score:
-                max_score = current_score
-                best_word = tile.letter
+    for word in twl.anagram(''.join(letter for letter, _ in letters_points)):
+        current_score = calculate_word_score(word, tile_instances)
+        if current_score > max_score:
+            max_score = current_score
+            best_word = word
 
     return best_word, max_score
+
+
 
 def compare_score(computer_score, user_score):
     print(f"Computer's score: {computer_score}, Your score: {user_score}")
@@ -213,29 +234,24 @@ def reset_tiles(tile_instances):
         tile.reset_tiles()
     print("Resetting tiles...")
 
-def user_input_word(letters_points) -> str:
-    while True:
-        guess = input("Enter your word (if no valid words, press Enter with no input): ")
-        if is_valid(guess, letters_points):
-            return guess
-        else:
-            print("Invalid word. Use only the provided letters.")
+def is_valid(word: str, available_letters: str) -> bool:
+    """
+    Checks if the user's input is a valid word based on available letters
 
-def is_valid(word, available_letters):
-    blank_tiles = available_letters.count(('?', 0))
-    for letter, _ in word:
-        if word.count((letter, 0)) > available_letters.count((letter, 0)):
+    :param word: User's word they inputted
+    :param available_letters: Valid letters to use, ? means any letter
+    """
+
+    blank_tiles = available_letters.count('?')
+    for letter in word:
+        if word.count(letter) > available_letters.count(letter):
             if blank_tiles > 0:
                 blank_tiles -= 1
-                available_letters = available_letters.replace(('?', 0), (letter, 0), 1)
+                available_letters = available_letters.replace('?', letter, 1)
                 continue
             return False
     return True
 
-
-def no_points_generate_letters(amount=7):
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    return random.sample(alphabet, amount)
 
 def longest_words(letters):
     english_word_list = []
@@ -257,21 +273,6 @@ def calculate_word_score(word, tile_instances):
                 total_score += tile.points
                 break  # Break once you find the matching letter
     return total_score
-
-def user_input_word(letters_points):
-    while True:
-        guess = input("Enter your word (if no valid words, press Enter with no input): ")
-        if is_valid(guess, [letter for letter, _ in letters_points]):
-            return guess
-        else:
-            print("Invalid word. Use only the provided letters.")
-
-
-def is_valid(word, available_letters):
-    for letter in word:
-        if word.count(letter) > available_letters.count(letter):
-            return False
-    return True
 
 
 def ready_input() -> str:
