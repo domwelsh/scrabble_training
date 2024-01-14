@@ -63,7 +63,7 @@ def mode_2():
             print(f"Correct. {correct_words}")
         elif isinstance(correct_words, str) and guess != "":
             print(f"Incorrect. {correct_words}")
-        elif len(guess) == len(correct_words) and guess.lower() == correct_words.lower():
+        elif len(guess) == len(correct_words):
             if len(correct_words) == 1:
                 print("Correct! You found the longest word.")
             else:
