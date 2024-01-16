@@ -145,6 +145,43 @@ def mode_3():
     print("Entering Practice Mode 3...")
 
     # Create instances of Tile based on the data
+    tile_instances = [Tile(letter, count, points) for letter, count, points in create_tiles()]
+
+    while True:
+        if ready_input() == 'q':
+            break
+
+        # Generate letters using Tile instances
+        letters_points = points_generate_letters(tile_instances)
+        print("Generated Letters:", ' '.join(letter for letter, _ in letters_points))
+
+        only_letters = ''.join([letter for letter, _ in letters_points])
+
+        # Get user's word guess
+        guess = user_input_word(only_letters)
+
+        # Calculate total score for the user's guess
+        total_score = calculate_word_score(guess, tile_instances)
+        if guess == "":
+            print("Guessed there are no valid words")
+        else:
+            print(f"Score for the word '{guess}': {total_score}")
+
+        highest_score = highest_point_word(only_letters, tile_instances)
+
+        if isinstance(highest_score, str):
+            print(highest_score)
+        else:
+            print(f"Computer's result: {highest_score[0]} for {highest_score[1]}")
+
+        # Option to reset tiles
+        print(f"There are {tiles_remaining(tile_instances)} tiles left in the bag.")
+        reset_option = input("Do you want to refill the bag? (y/n): ")
+        if reset_option.lower() == 'y':
+            refill_bag(tile_instances)
+
+
+def create_tiles():
     tiles_to_generate = [
         ('a', 9, 1),
         ('b', 2, 3),
@@ -174,38 +211,7 @@ def mode_3():
         ('z', 1, 10),
         ('?', 2, 0)
     ]
-
-    tile_instances = [Tile(letter, count, points) for letter, count, points in tiles_to_generate]
-
-    while True:
-        if ready_input() == 'q':
-            break
-
-        # Generate letters using Tile instances
-        letters_points = points_generate_letters(tile_instances)
-        print("Generated Letters:", ' '.join(letter for letter, _ in letters_points))
-
-        only_letters = ''.join([letter for letter, _ in letters_points])
-
-        # Get user's word guess
-        guess = user_input_word(only_letters)
-
-        # Calculate total score for the user's guess
-        total_score = calculate_word_score(guess, tile_instances)
-        print(f"Score for the word '{guess}': {total_score}")
-
-        highest_score = highest_point_word(only_letters, tile_instances)
-
-        if isinstance(highest_score, str):
-            print(highest_score)
-        else:
-            print(f"Computer's result: {highest_score[0]} for {highest_score[1]}")
-
-        # Option to reset tiles
-        reset_option = input("Do you want to reset the tiles? (y/n): ")
-        if reset_option.lower() == 'y':
-            refill_bag(tile_instances)
-
+    return tiles_to_generate
 
 def ready_input() -> str:
     """
@@ -220,12 +226,19 @@ def ready_input() -> str:
     if r_input.lower() == 'q':
         print("Returning to practice mode menu...")
     return r_input
+
+
+def tiles_remaining(tile_instances):
+    remaining_tiles = 0
+    for tile in tile_instances:
+        remaining_tiles += tile.tile_count
+    return remaining_tiles
         
 
 def refill_bag(tile_instances):
     for tile in tile_instances:
         tile.reset_tiles()
-    print("Resetting tiles...")
+    print("Refilling bag...")
 
 
 def user_input_word(letters: str) -> str:
