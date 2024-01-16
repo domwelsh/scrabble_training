@@ -2,14 +2,55 @@ import random
 import twl
 
 class Tile:
-    def __init__(self, letter, tile_count, points_value):
+    def __init__(self, letter, tile_count=0, points_value=0):
+        if not letter:
+            raise ValueError("Missing letter")
         self.letter = letter
         self.tile_count = tile_count
-        self.points = points_value
+        self.points_value = points_value
         self.max_tile_count = tile_count
 
+    @property
+    def letter(self):
+        return self._letter
+    
+    @letter.setter
+    def letter(self, letter):
+        if isinstance(letter, str) == False:
+            raise ValueError("Needs to be a string")
+        elif letter.isalpha() or letter == "?":
+            self._letter = letter
+        else:
+            raise ValueError("Needs to be an actual letter, or the ? symbol")
+
+    @property
+    def tile_count(self):
+        return self._tile_count
+    
+    @tile_count.setter
+    def tile_count(self, tile_count):
+        if isinstance(tile_count, int) == False:
+            raise ValueError("Needs to be an int")
+        elif tile_count < 0:
+            raise ValueError("Cannot have negative amount of tiles")
+        else:
+            self._tile_count = tile_count
+    
+    @property
+    def points_value(self):
+        return self._points_value
+    
+    @points_value.setter
+    def points_value(self, points_value):
+        if isinstance(points_value, int) == False:
+            raise ValueError("Needs to be an int")
+        elif points_value < 0:
+            raise ValueError("Points cannot be negative")
+        else:
+            self._points_value = points_value
+
     def __str__(self):
-        return f"Tile {self.letter}: {self.tile_count} remaining, {self.points} points per tile"
+        return f"Tile {self.letter}: {self.tile_count} remaining, {self.points_value} points per tile"
 
     def tiles_withdrawn(self):
         if self.tile_count > 0:
@@ -242,7 +283,7 @@ def no_points_generate_letters(amount: int = 7) -> str:
 
 
 def points_generate_letters(tile_instances, amount=7):
-    available_letters = [(tile.letter, tile.points) for tile in tile_instances if not tile.is_empty()]
+    available_letters = [(tile.letter, tile.points_value) for tile in tile_instances if not tile.is_empty()]
     selected_letters = random.sample(available_letters, amount)
 
     # Withdraw tiles
@@ -260,7 +301,7 @@ def calculate_word_score(word, tile_instances):
     for letter in word:
         for tile in tile_instances:
             if letter == tile.letter:
-                total_score += tile.points
+                total_score += tile.points_value
                 break  # Break once you find the matching letter
     return total_score
 
