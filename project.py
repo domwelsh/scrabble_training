@@ -7,7 +7,6 @@ class Tile:
         self.tile_count = tile_count
         self.points = points_value
         self.max_tile_count = tile_count
-        self.reset_tiles()
 
     def __str__(self):
         return f"Tile {self.letter}: {self.tile_count} remaining, {self.points} points per tile"
@@ -164,13 +163,7 @@ def mode_3():
         # Option to reset tiles
         reset_option = input("Do you want to reset the tiles? (y/n): ")
         if reset_option.lower() == 'y':
-            reset_tiles_mode3(tile_instances)
-
-        # Option to continue or quit
-        user_input_continue = input("Enter 'q' to quit, or press Enter to continue: ")
-        if user_input_continue.lower() == 'q':
-            print("Exiting Practice Mode 3...")
-            break
+            refill_bag(tile_instances)
 
 
 def ready_input() -> str:
@@ -188,11 +181,7 @@ def ready_input() -> str:
     return r_input
         
 
-def reset_tiles():
-    # Additional function to reset the tiles, if needed
-    print("Resetting tiles...")
-
-def reset_tiles_mode3(tile_instances):
+def refill_bag(tile_instances):
     for tile in tile_instances:
         tile.reset_tiles()
     print("Resetting tiles...")
@@ -251,6 +240,7 @@ def no_points_generate_letters(amount: int = 7) -> str:
     alphabet = 'abcdefghijklmnopqrstuvwxyz?'
     return ''.join(random.sample(alphabet, amount))
 
+
 def points_generate_letters(tile_instances, amount=7):
     available_letters = [(tile.letter, tile.points) for tile in tile_instances if not tile.is_empty()]
     selected_letters = random.sample(available_letters, amount)
@@ -263,6 +253,7 @@ def points_generate_letters(tile_instances, amount=7):
                 break
 
     return selected_letters
+
 
 def calculate_word_score(word, tile_instances):
     total_score = 0
