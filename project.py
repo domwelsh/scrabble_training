@@ -93,7 +93,7 @@ def mode_1():
         if ready_input() == 'q':
             break
 
-        letters = no_points_generate_letters()
+        letters = generate_letters_random()
         print("Generated Letters:", ' '.join(letters))
         
         input("Press Enter to reveal the longest words.")
@@ -115,7 +115,7 @@ def mode_2():
         if ready_input() == 'q':
             break
 
-        letters = no_points_generate_letters()
+        letters = generate_letters_random()
         print("Generated Letters:", ' '.join(letters))
         
         guess = user_input_word(letters)
@@ -152,10 +152,12 @@ def mode_3():
             break
 
         # Generate letters using Tile instances
-        letters_points = points_generate_letters(tile_instances)
-        print("Generated Letters:", ' '.join(letter for letter, _ in letters_points))
-
-        only_letters = ''.join([letter for letter, _ in letters_points])
+        only_letters = generate_letters_tiles(tile_instances)
+        print("Generated Letters and Points:")
+        for letter in only_letters:
+            for tile in tile_instances:
+                if tile.letter == letter:
+                    print(f"{letter} ({tile.points_value} pts)")
 
         # Get user's word guess
         guess = user_input_word(only_letters)
@@ -163,7 +165,7 @@ def mode_3():
         # Calculate total score for the user's guess
         total_score = calculate_word_score(guess, tile_instances)
         if guess == "":
-            print("Guessed there are no valid words")
+            print("You guessed there are no valid words")
         else:
             print(f"Score for the word '{guess}': {total_score}")
 
@@ -175,10 +177,15 @@ def mode_3():
             print(f"Computer's result: {highest_score[0]} for {highest_score[1]}")
 
         # Option to reset tiles
-        print(f"There are {tiles_remaining(tile_instances)} tiles left in the bag.")
-        reset_option = input("Do you want to refill the bag? (y/n): ")
-        if reset_option.lower() == 'y':
+        tiles_in_bag = tiles_remaining(tile_instances)
+        if tiles_in_bag < 7:
+            print(f"You have reached the end of the bag")
             refill_bag(tile_instances)
+        else:
+            print(f"There are {tiles_in_bag} tiles left in the bag.")
+            reset_option = input("Enter 'y' to refill the bag, or press Enter to continue: ")
+            if reset_option.lower() == 'y':
+                refill_bag(tile_instances)
 
 
 def create_tiles():
@@ -282,7 +289,7 @@ def is_valid(word: str, available_letters: str) -> bool:
     return True
 
 
-def no_points_generate_letters(amount: int = 7) -> str:
+def generate_letters_random(amount: int = 7) -> str:
     """
     Generate a string of random letters, no points associated
     ? represents blank tiles which can be used as any letter
@@ -295,12 +302,13 @@ def no_points_generate_letters(amount: int = 7) -> str:
     return ''.join(random.sample(alphabet, amount))
 
 
-def points_generate_letters(tile_instances, amount=7):
-    available_letters = [(tile.letter, tile.points_value) for tile in tile_instances if not tile.is_empty()]
-    selected_letters = random.sample(available_letters, amount)
+def generate_letters_tiles(tile_instances, amount=7):
+    weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
+    print(weighted_letters)
+    selected_letters = random.sample(weighted_letters, amount)
 
     # Withdraw tiles
-    for letter, _ in selected_letters:
+    for letter in selected_letters:
         for tile in tile_instances:
             if tile.letter == letter:
                 tile.tiles_withdrawn()

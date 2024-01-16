@@ -1,5 +1,5 @@
 import pytest
-from project import ready_input, user_input_word, is_valid, longest_words, no_points_generate_letters, points_generate_letters, calculate_word_score, highest_point_word, all_words_list
+from project import ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_word, all_words_list
 
 
 def test_ready_input():
@@ -25,15 +25,15 @@ def test_longest_words():
    # Add more tests, especially corner cases
 
 
-def test_no_points_generate_letters():
-    assert len(no_points_generate_letters()) == 7 and isinstance(no_points_generate_letters(), str)
-    assert no_points_generate_letters(0) == ""
+def test_generate_letters_random():
+    assert len(generate_letters_random()) == 7 and isinstance(generate_letters_random(), str)
+    assert generate_letters_random(0) == ""
     with pytest.raises(ValueError):
-        no_points_generate_letters(-1)
+        generate_letters_random(-1)
     # Add more tests, especially other corner cases
 
 
-def test_points_generate_letters():
+def test_generate_letters_tiles():
     pass
 
 
