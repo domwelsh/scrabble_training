@@ -29,3 +29,15 @@ def test_tile_reset_tiles():
     tile.tiles_withdrawn()
     tile.reset_tiles()
     assert tile.tile_count == 5
+
+def test_tile_invalid_letter():
+    with pytest.raises(ValueError, match="Needs to be an actual letter, or the ? symbol"):
+        Tile(123, 5, 2)
+
+def test_tile_negative_tile_count():
+    with pytest.raises(ValueError, match="Cannot have negative amount of tiles"):
+        Tile('a', -5, 2)
+
+def test_tile_negative_points_value():
+    with pytest.raises(ValueError, match="Points cannot be negative"):
+        Tile('a', 5, -2)
