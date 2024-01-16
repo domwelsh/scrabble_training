@@ -1,5 +1,5 @@
 import pytest
-from project import ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_word, all_words_list
+from project import Tile, ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_word, all_words_list
 
 
 def test_ready_input():
@@ -34,11 +34,22 @@ def test_generate_letters_random():
 
 
 def test_generate_letters_tiles():
-    pass
+    tile_a = Tile('a', 5, 2)
+    tile_b = Tile('b', 20, 0)
+    tile_c = Tile('c', 10, 3)
+    tile_iterable = [tile_a]
+    with pytest.raises(ValueError):
+        generate_letters_tiles(tile_iterable)
 
 
 def test_calculate_word_score():
-    pass
+    tile_a = Tile('a', 10, 10)
+    tile_b = Tile('b', 10, 5)
+    tile_iterable = [tile_a, tile_b]
+    assert calculate_word_score("aaaaaa", tile_iterable) == 60
+    assert calculate_word_score("cdccd", tile_iterable) == 0
+    with pytest.raises(TypeError):
+            calculate_word_score(123, tile_iterable) == 0
 
 
 def test_highest_point_word():
