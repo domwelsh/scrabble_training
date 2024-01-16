@@ -304,7 +304,6 @@ def generate_letters_random(amount: int = 7) -> str:
 
 def generate_letters_tiles(tile_instances, amount=7):
     weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
-    print(weighted_letters)
     selected_letters = random.sample(weighted_letters, amount)
 
     # Withdraw tiles
