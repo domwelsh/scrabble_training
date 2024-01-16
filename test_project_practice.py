@@ -21,18 +21,20 @@ def test_tile_withdrawn():
     assert tile.tile_count == 8
 
 def test_tile_is_empty():
-    tile = Tile('a', 0, 1)
-    assert tile.is_empty()
+    # Test for a case where tile_count is 0
+    tile1 = Tile('a', 0, 1)
+    assert tile1.is_empty()
 
 def test_tile_reset_tiles():
     tile = Tile('a', 5, 1)
     tile.tiles_withdrawn()
     tile.reset_tiles()
     assert tile.tile_count == 5
-
+    
 def test_tile_invalid_letter():
-    with pytest.raises(ValueError, match="Needs to be an actual letter, or the ? symbol"):
+    with pytest.raises(ValueError, match="Needs to be a string"):
         Tile(123, 5, 2)
+
 
 def test_tile_negative_tile_count():
     with pytest.raises(ValueError, match="Cannot have negative amount of tiles"):
