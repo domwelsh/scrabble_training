@@ -270,6 +270,7 @@ def ready_input() -> str:
 
     :return: Users input as a string. Anything except only 'q' will continue the practice
     """
+    print()
     r_input = input("Press Enter when ready to generate letters. "
                     "The '?' counts as any letter. "
                     "Enter 'q' to quit: ")
