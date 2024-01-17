@@ -169,7 +169,7 @@ def mode_3():
     """Practice mode of user entering their guess for the highest scoring word, using tiles from a Scrabble bag"""
     print("Entering Practice Mode 3...")
 
-    # Create instances of Tile based on the data
+    # Create instances of Tile based on create_tiles list
     tile_instances = [Tile(letter, count, points) for letter, count, points in create_tiles()]
 
     while True:
