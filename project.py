@@ -3,7 +3,14 @@ import twl
 
 
 class Tile:
-    def __init__(self, letter, tile_count=0, points_value=0):
+    """
+    Tiles that are used in the boardgame Scrabble.
+
+    :param letter: The letter of the tile
+    :param tile_count: The number of tiles of the letter available in the bag
+    :param points_value: The number of points scored each time the letter is used
+    """
+    def __init__(self, letter: str, tile_count: int = 0, points_value: int = 0):
         if not letter:
             raise ValueError("Missing letter")
         self.letter = letter
@@ -13,23 +20,27 @@ class Tile:
 
     @property
     def letter(self):
+        """Get or set letter. Letter must be set as a single alphabetical or ? character"""
         return self._letter
     
     @letter.setter
-    def letter(self, letter):
+    def letter(self, letter: str):
         if isinstance(letter, str) == False:
             raise ValueError("Needs to be a string")
-        elif letter.isalpha() or letter == "?":
-            self._letter = letter
-        else:
+        elif len(letter) > 1:
+            raise ValueError("Must be a single letter")
+        elif not letter.isalpha() and letter != "?":
             raise ValueError("Needs to be an actual letter, or the ? symbol")
+        else:
+            self._letter = letter
 
     @property
     def tile_count(self):
+        """Get or set tile count. Tile count must be set as an int > 0"""
         return self._tile_count
     
     @tile_count.setter
-    def tile_count(self, tile_count):
+    def tile_count(self, tile_count: int):
         if isinstance(tile_count, int) == False:
             raise ValueError("Needs to be an int")
         elif tile_count < 0:
@@ -39,10 +50,11 @@ class Tile:
     
     @property
     def points_value(self):
+        """Get or set points value. Points value must be set as an int > 0"""
         return self._points_value
     
     @points_value.setter
-    def points_value(self, points_value):
+    def points_value(self, points_value: int):
         if isinstance(points_value, int) == False:
             raise ValueError("Needs to be an int")
         elif points_value < 0:
@@ -51,16 +63,20 @@ class Tile:
             self._points_value = points_value
 
     def __str__(self):
+        """Return information about the tile instance when it is called upon as a str"""
         return f"Tile {self.letter}: {self.tile_count} remaining, {self.points_value} points per tile"
 
-    def tiles_withdrawn(self):
+    def tiles_withdrawn(self) -> None:
+        """Reduces current tile count by 1, to a minimum of 0"""
         if self.tile_count > 0:
             self.tile_count -= 1
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """Checks if there are any tiles remaining in the bag"""
         return self.tile_count == 0
 
-    def reset_tiles(self):
+    def reset_tiles(self) -> None:
+        """Resets the number of tiles in the bag to the maximum number of tiles"""
         self.tile_count = self.max_tile_count
 
 
@@ -83,14 +99,15 @@ def main():
         else:
             print("Invalid choice. Please try again.")
         print("Select a mode:")
-        print("1. Show all longest words")
-        print("2. Enter your longest word guesses")
-        print("3. Enter your highest scoring word guesses")
+        print("1. Show all longest words from 7 random letters")
+        print("2. Enter your guess for the longest word from 7 random letters")
+        print("3. Enter your guess for the highest scoring word, using tiles from a Scrabble bag")
         print("q. Quit")
         user_choice = input("Enter the mode number: ")
 
 
 def mode_1():
+    """Practice mode of longest words from 7 random letters"""
     print("Entering Practice Mode 1...")
     while True:
         if ready_input() == 'q':
@@ -113,6 +130,7 @@ def mode_1():
 
 
 def mode_2():
+    """Practice mode of user entering their guess for the longest word from 7 random letters"""
     print("Entering Practice Mode 2...")
     while True:
         if ready_input() == 'q':
@@ -144,8 +162,8 @@ def mode_2():
                     print(w)
 
 
-#highest scoring word guesses
 def mode_3():
+    """Practice mode of user entering their guess for the highest scoring word, using tiles from a Scrabble bag"""
     print("Entering Practice Mode 3...")
 
     # Create instances of Tile based on the data
@@ -213,7 +231,7 @@ def mode_3():
 
 
 def create_tiles() -> list:
-    """List of Scrabble tiles"""
+    """List of tiles to be created using Tile Class"""
     tiles_to_generate = [
         ('a', 9, 1),
         ('b', 2, 3),
