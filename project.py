@@ -172,7 +172,6 @@ def mode_3():
             print("You guessed there are no valid words")
         else:
             print(f"You guessed '{guess}' for {total_score}")
-            tiles_withdrawn(guess, tile_instances)
 
         highest_score_words = highest_point_words(only_letters, tile_instances)
 
@@ -336,12 +335,14 @@ def generate_letters_tiles(tile_instances: list, amount: int = 7) -> str:
     :return: A string of letters that are to be used to make words
     """
     weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
-    return ''.join(random.sample(weighted_letters, amount))
+    selected_letters = ''.join(random.sample(weighted_letters, amount))
+    tiles_withdrawn(selected_letters, tile_instances)
+    return selected_letters
 
 
-def tiles_withdrawn(word: str, tile_instances: list) -> None:
+def tiles_withdrawn(letters: str, tile_instances: list) -> None:
     """Reduce the tile count of used letters"""
-    for letter in word:
+    for letter in letters:
         for tile in tile_instances:
             if tile.letter == letter and not tile.is_empty():
                 tile.tiles_withdrawn()
