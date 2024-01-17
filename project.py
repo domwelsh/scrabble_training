@@ -1,6 +1,7 @@
 import random
 import twl
 
+
 class Tile:
     def __init__(self, letter, tile_count=0, points_value=0):
         if not letter:
@@ -62,6 +63,7 @@ class Tile:
     def reset_tiles(self):
         self.tile_count = self.max_tile_count
 
+
 def main():
     print("Welcome to English Scrabble Practice!")
     user_choice = None
@@ -86,6 +88,7 @@ def main():
         print("3. Enter your highest scoring word guesses")
         print("q. Quit")
         user_choice = input("Enter the mode number: ")
+
 
 def mode_1():
     print("Entering Practice Mode 1...")
@@ -140,6 +143,7 @@ def mode_2():
                 for w in correct_words:
                     print(w)
 
+
 #highest scoring word guesses
 def mode_3():
     print("Entering Practice Mode 3...")
@@ -167,15 +171,35 @@ def mode_3():
         if guess == "":
             print("You guessed there are no valid words")
         else:
-            print(f"Score for the word '{guess}': {total_score}")
+            print(f"You guessed '{guess}' for {total_score}")
             tiles_withdrawn(guess, tile_instances)
 
-        highest_score = highest_point_word(only_letters, tile_instances)
+        highest_score_words = highest_point_words(only_letters, tile_instances)
 
-        if isinstance(highest_score, str):
-            print(highest_score)
+        if isinstance(highest_score_words, str) and guess == "":
+            print(f"Correct! {highest_score_words}")
+        elif isinstance(highest_score_words, str) and guess != "":
+            print(f"Incorrect. {highest_score_words}")
         else:
-            print(f"Computer's result: {highest_score[0]} for {highest_score[1]}")
+            highest_words = highest_score_words[0]
+            highest_score = highest_score_words[1]
+            if guess == highest_score:
+                if len(highest_words) == 1:
+                    print(f"Correct! You guessed the highest word!")
+                else:
+                    print(f"Correct! Other words with the same score are:")
+                    for word in highest_words:
+                        print(word)
+            else:
+                print(f"Incorrect. The computer's highest score was {highest_score}.")
+                if len(highest_words) == 1:
+                    print(f"The word was:")
+                    print(highest_words[0])
+                else:
+                    print(f"The words are:")
+                    for word in highest_words:
+                        print(word)
+            
 
         # Option to reset tiles
         tiles_in_bag = tiles_remaining(tile_instances)
@@ -189,7 +213,8 @@ def mode_3():
                 refill_bag(tile_instances)
 
 
-def create_tiles():
+def create_tiles() -> list:
+    """List of Scrabble tiles"""
     tiles_to_generate = [
         ('a', 9, 1),
         ('b', 2, 3),
@@ -221,13 +246,13 @@ def create_tiles():
     ]
     return tiles_to_generate
 
+
 def ready_input() -> str:
     """
     Asks the user if they want to do the selected mode again
 
     :return: Users input as a string. Anything except only 'q' will continue the practice
     """
-
     r_input = input("Press Enter when ready to generate letters. "
                     "The '?' counts as any letter. "
                     "Enter 'q' to quit: ")
@@ -236,14 +261,16 @@ def ready_input() -> str:
     return r_input
 
 
-def tiles_remaining(tile_instances):
+def tiles_remaining(tile_instances: list) -> int:
+    """Returns total tiles left"""
     remaining_tiles = 0
     for tile in tile_instances:
         remaining_tiles += tile.tile_count
     return remaining_tiles
         
 
-def refill_bag(tile_instances):
+def refill_bag(tile_instances: list) -> None:
+    """Resets tiles to their max_tile_count"""
     for tile in tile_instances:
         tile.reset_tiles()
     print("Refilling bag...")
@@ -256,7 +283,6 @@ def user_input_word(letters: str) -> str:
     :param letters: Available letters to make a word out of. ? represent any letter
     :return: A string that is either "" or only has letters from `letters` param
     """
-
     while True:
         guess = input("Enter your word (if no valid words, press Enter with no input): ")
         if guess == "":
@@ -278,7 +304,6 @@ def is_valid(word: str, available_letters: str) -> bool:
     :param word: User's word they inputted
     :param available_letters: Valid letters to use, ? means any letter
     """
-
     blank_tiles = available_letters.count('?')
     for letter in word:
         if word.count(letter) > available_letters.count(letter):
@@ -292,30 +317,39 @@ def is_valid(word: str, available_letters: str) -> bool:
 
 def generate_letters_random(amount: int = 7) -> str:
     """
-    Generate a string of random letters, no points associated
+    Generate a string of random letters.
     ? represents blank tiles which can be used as any letter
 
     :param amount: Number of letters to return
-    :return: A string of letters that are to be used to make a word
+    :return: A string of letters that are to be used to make words
     """
-
     alphabet = 'abcdefghijklmnopqrstuvwxyz?'
     return ''.join(random.sample(alphabet, amount))
 
 
-def generate_letters_tiles(tile_instances, amount=7):
-    weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
-    selected_letters = random.sample(weighted_letters, amount)
-    return selected_letters
+def generate_letters_tiles(tile_instances: list, amount: int = 7) -> str:
+    """
+    Generate a string of random letters, sample is weighted based on remaining tiles.
+    ? represents blank tiles which can be used as any letter
 
-def tiles_withdrawn(word, tile_instances):
+    :param amount: Number of letters to return
+    :return: A string of letters that are to be used to make words
+    """
+    weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
+    return ''.join(random.sample(weighted_letters, amount))
+
+
+def tiles_withdrawn(word: str, tile_instances: list) -> None:
+    """Reduce the tile count of used letters"""
     for letter in word:
         for tile in tile_instances:
             if tile.letter == letter and not tile.is_empty():
                 tile.tiles_withdrawn()
                 break
 
-def calculate_word_score(word, tile_instances):
+
+def calculate_word_score(word: str, tile_instances: list) -> int:
+    """Return total score of the word based on the point value of each letter"""
     total_score = 0
     for letter in word:
         for tile in tile_instances:
@@ -325,9 +359,16 @@ def calculate_word_score(word, tile_instances):
     return total_score
 
 
-def highest_point_word(letters, tile_instances):
+def highest_point_words(letters: str, tile_instances: list) -> tuple | str:
+    """
+    Create a list of the highest scoring words based on available letters, or says if there are no valid words
+
+    :param letters: Available letters to make words from
+    :param tile_instances: List of tile instances
+    :return: A tuple with list of highest scoring words and the max score as an int, or a string saying no words can be made
+    """
     max_score = 0
-    best_word = ""
+    best_words = []
 
     word_list = all_words_list(letters)
     if word_list:
@@ -335,8 +376,11 @@ def highest_point_word(letters, tile_instances):
             current_score = calculate_word_score(word, tile_instances)
             if current_score > max_score:
                 max_score = current_score
-                best_word = word
-        return best_word, max_score
+                best_words.clear()
+                best_words.append(word)
+            elif current_score == max_score:
+                best_words.append(word)
+        return best_words, max_score
     else:
         return "No valid word found."
 
@@ -346,9 +390,8 @@ def longest_words(letters: str) -> list | str:
     Creates a list of the longest words based on available letters, or says if there are no valid words
 
     :param letters: Available letters to make words from
-    :return: A list of longest words, or a string saying no words can be made from the letters
+    :return: A list of longest words, or a string saying no words can be made
     """
-    
     word_list = all_words_list(letters)
 
     if word_list:
@@ -359,7 +402,11 @@ def longest_words(letters: str) -> list | str:
         return "No valid word found."
     
 
-def all_words_list(letters):
+def all_words_list(letters: str) -> list:
+    """
+    Uses twl.anagram() to return a list of all Scrabble words that can be made from the letters.
+    Considers ? to represent any letter.
+    """
     available_words_list = []
     for word in twl.anagram(letters):
         available_words_list.append(word)
