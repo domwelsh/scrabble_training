@@ -142,6 +142,9 @@ def mode_2():
         guess = user_input_word(letters)
         correct_words = longest_words(letters)
 
+        # Printing correct response based on if there were any valid words,
+        # if there was only 1 longest word or if there were more than 1,
+        # and if user guessed a word that was the longest length 
         if isinstance(correct_words, str) and guess == "":
             print(f"Correct. {correct_words}")
         elif isinstance(correct_words, str) and guess != "":
@@ -193,6 +196,9 @@ def mode_3():
 
         highest_score_words = highest_point_words(only_letters, tile_instances)
 
+        # Printing correct response based on if there were any valid words,
+        # if there was only 1 highest scoring word or if there were more than 1,
+        # and if user guessed a word that was the highest score
         if isinstance(highest_score_words, str) and guess == "":
             print(f"Correct! {highest_score_words}")
         elif isinstance(highest_score_words, str) and guess != "":
