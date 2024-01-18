@@ -98,6 +98,9 @@ def test_multiple_tiles_withdrawn():
     multiple_tiles_withdrawn(letters, tile_instances)
     assert tile_s.tile_count == 3
     assert tile_e.tile_count == 10
+    s_letters = "sssssss"
+    multiple_tiles_withdrawn(s_letters, tile_instances)
+    assert tile_s.tile_count == 0
 
 def test_tile_initialization():
     tile = Tile('a', 9, 1)
