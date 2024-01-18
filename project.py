@@ -12,7 +12,7 @@ class Tile:
     """
     def __init__(self, letter: str, tile_count: int = 0, points_value: int = 0):
         if not letter:
-            raise ValueError("Missing letter")
+            raise TypeError("Missing letter")
         self.letter = letter
         self.tile_count = tile_count
         self.points_value = points_value
@@ -26,7 +26,7 @@ class Tile:
     @letter.setter
     def letter(self, letter: str):
         if isinstance(letter, str) == False:
-            raise ValueError("Needs to be a string")
+            raise TypeError("Needs to be a string")
         elif len(letter) > 1:
             raise ValueError("Must be a single letter")
         elif not letter.isalpha() and letter != "?":
@@ -42,7 +42,7 @@ class Tile:
     @tile_count.setter
     def tile_count(self, tile_count: int):
         if isinstance(tile_count, int) == False:
-            raise ValueError("Needs to be an int")
+            raise TypeError("Needs to be an int")
         elif tile_count < 0:
             raise ValueError("Cannot have negative amount of tiles")
         else:
@@ -56,7 +56,7 @@ class Tile:
     @points_value.setter
     def points_value(self, points_value: int):
         if isinstance(points_value, int) == False:
-            raise ValueError("Needs to be an int")
+            raise TypeError("Needs to be an int")
         elif points_value < 0:
             raise ValueError("Points cannot be negative")
         else:
