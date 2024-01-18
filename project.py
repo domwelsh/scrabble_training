@@ -103,7 +103,7 @@ def main():
         print("2. Enter your guess for the longest word from 7 random letters")
         print("3. Enter your guess for the highest scoring word, using tiles from a Scrabble bag")
         print("q. Quit")
-        user_choice = input("Enter the mode number: ")
+        user_choice = input("Enter the mode number: ").strip()
 
 
 def mode_1():
@@ -231,7 +231,7 @@ def mode_3():
             refill_bag(tile_instances)
         else:
             print(f"There are {tiles_in_bag} tiles left in the bag.")
-            reset_option = input("Enter 'y' to refill the bag, or press Enter to continue: ")
+            reset_option = input("Enter 'y' to refill the bag, or press Enter to continue: ").strip()
             if reset_option.lower() == 'y':
                 refill_bag(tile_instances)
 
@@ -279,7 +279,7 @@ def ready_input() -> str:
     print()
     r_input = input("Press Enter when ready to generate letters. "
                     "The '?' counts as any letter. "
-                    "Enter 'q' to quit: ")
+                    "Enter 'q' to quit: ").strip()
     if r_input.lower() == 'q':
         print("Returning to practice mode menu...")
     return r_input
@@ -308,7 +308,7 @@ def user_input_word(letters: str) -> str:
     :return: A string that is either "" or only has letters from `letters` param
     """
     while True:
-        guess = input("Enter your word (if no valid words, press Enter with no input): ")
+        guess = input("Enter your word (if no valid words, press Enter with no input): ").strip()
         if guess == "":
             return guess
         else:
