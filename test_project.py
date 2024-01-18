@@ -90,9 +90,14 @@ def test_all_words_list():
     assert all_words_list(letters) == ['es', 'see']
 
 
-
 def test_multiple_tiles_withdrawn():
-    pass
+    letters = "see"
+    tile_s = Tile('s', 4, 1)
+    tile_e = Tile('e', 12, 1)
+    tile_instances = [tile_e, tile_s]
+    multiple_tiles_withdrawn(letters, tile_instances)
+    assert tile_s.tile_count == 3
+    assert tile_e.tile_count == 10
 
 def test_tile_initialization():
     tile = Tile('a', 9, 1)
