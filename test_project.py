@@ -62,11 +62,33 @@ def test_calculate_word_score():
 
 
 def test_highest_point_words():
-    pass
+    letters = "iaguvme"
+    tile_i = Tile('i', 9, 1)
+    tile_a = Tile('a', 9, 1)
+    tile_g = Tile('g', 3, 2)
+    tile_u = Tile('u', 4, 1)
+    tile_v = Tile('v', 2, 4)
+    tile_m = Tile('m', 2, 3)
+    tile_e = Tile('e', 12, 1)
+    tile_iterable = [tile_i, tile_a, tile_g, tile_u, tile_v, tile_m, tile_e]
+    assert highest_point_words(letters, tile_iterable) [1] == 10
+    assert highest_point_words(letters, tile_iterable) == (['mauve', 'mavie'], 10)
+    with pytest.raises(TypeError):
+        highest_point_words(1, tile_iterable) == 10
+        highest_point_words(letters, tile_iterable) == (['mauve', 'mavie'], 10)
+        highest_point_words('', tile_iterable) == 10
+
+
 
 
 def test_all_words_list():
-    pass
+    letters = "see"
+    tile_s = Tile('s', 4, 1)
+    tile_e = Tile('e', 12, 1)
+    assert 'see' in all_words_list(letters)
+    assert 'es' in all_words_list(letters)
+    assert all_words_list(letters) == ['es', 'see']
+
 
 
 def test_multiple_tiles_withdrawn():
