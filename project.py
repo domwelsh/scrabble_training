@@ -45,6 +45,8 @@ class Tile:
             raise TypeError("Needs to be an int")
         elif tile_count < 0:
             raise ValueError("Cannot have negative amount of tiles")
+        elif hasattr(self, "max_tile_count") and tile_count > self.max_tile_count:
+            raise ValueError("Cannot have more tiles than maximum amount")
         else:
             self._tile_count = tile_count
     
