@@ -1,17 +1,25 @@
 import pytest
-from project import Tile, ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_words, all_words_list
+from project import Tile, ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_words, all_words_list, multiple_tiles_withdrawn
 
 
 def test_ready_input(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: '     q     ')
-    user_input = ready_input()
-    assert user_input == 'q'
+    assert ready_input() == 'q'
+    monkeypatch.setattr('builtins.input', lambda _: 'Q')
+    assert ready_input() == 'Q'
     
 
-def test_user_input_word():
-    # Dom - I'll take care of this one
-    pass
+def test_user_input_word(monkeypatch):
+    letters = 'abcd'
+    monkeypatch.setattr('builtins.input', lambda _: '         ')
+    assert user_input_word(letters) == ''
+    monkeypatch.setattr('builtins.input', lambda _: '  CAB  ')
+    assert user_input_word(letters) == 'cab'
 
+    int_letters = 12
+    monkeypatch.setattr('builtins.input', lambda _: '12')
+    with pytest.raises(AttributeError):
+        user_input_word(int_letters) == '12'
 
 def test_is_valid():
     assert is_valid("corn", "tnoarec") == True
@@ -58,6 +66,10 @@ def test_highest_point_words():
 
 
 def test_all_words_list():
+    pass
+
+
+def test_multiple_tiles_withdrawn():
     pass
 
 def test_tile_initialization():
