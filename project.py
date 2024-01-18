@@ -330,7 +330,9 @@ def is_valid(word: str, available_letters: str) -> bool:
     """
     blank_tiles = available_letters.count('?')
     for letter in word:
-        if word.count(letter) > available_letters.count(letter):
+        if not letter.isalpha():
+            return False
+        elif word.count(letter) > available_letters.count(letter):
             if blank_tiles > 0:
                 blank_tiles -= 1
                 available_letters = available_letters.replace('?', letter, 1)
