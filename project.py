@@ -170,7 +170,7 @@ def mode_3():
     print("Entering Practice Mode 3...")
 
     # Create instances of Tile based on create_tiles list
-    tile_instances = [Tile(letter, count, points) for letter, count, points in create_tiles()]
+    tile_instances = tuple([Tile(letter, count, points) for letter, count, points in create_tiles()])
 
     while True:
         if ready_input() == 'q':
