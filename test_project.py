@@ -11,7 +11,9 @@ from project import (
     all_words_list,
     multiple_tiles_withdrawn,
     tiles_remaining,
-    refill_bag
+    refill_bag,
+    mode_2_results,
+    mode_3_results
 )
 
 
@@ -150,6 +152,32 @@ def test_is_valid():
         is_valid("word", 123)
 
 
+def test_mode_2_results(capsys):
+    mode_2_results("No valid word found.", "")
+    output = capsys.readouterr()
+    assert output.out.strip() == "Correct. No valid word found."
+
+    mode_2_results("Test", "Guess")
+    output = capsys.readouterr()
+    assert output.out.strip() == "Incorrect. Test"
+
+    mode_2_results(['test'], 'test')
+    output = capsys.readouterr()
+    assert output.out.strip() == "Correct! You found the longest word."
+
+    mode_2_results(['test', 'word'], 'word')
+    output = capsys.readouterr()
+    assert "Correct! You found one of the longest words." in output.out.strip() 
+
+    mode_2_results(['test'], 'wrong')
+    output = capsys.readouterr()
+    assert output.out.strip() == "Incorrect. The longest word is: test"
+
+    mode_2_results(['test', 'again'], 'stillwrong')
+    output = capsys.readouterr()
+    assert "Incorrect. The longest words are:" in output.out.strip()
+
+
 def test_generate_letters_tiles():
     tile_a = Tile('a', 5, 2)
     tile_b = Tile('b', 20, 0)
@@ -216,6 +244,32 @@ def test_highest_point_words():
     letters = "ai"
     assert isinstance(highest_point_words(letters, tile_iterable)[0], list) \
         and len(highest_point_words(letters, tile_iterable)[0]) == 1
+
+
+def test_mode_3_results(capsys):
+    mode_3_results("test", "", 0)
+    output = capsys.readouterr()
+    assert output.out.strip() == "Correct! test"
+
+    mode_3_results("test", "wrong", 0)
+    output = capsys.readouterr()
+    assert output.out.strip() == "Incorrect. test"
+
+    mode_3_results((["test"], 10), "something", 10)
+    output = capsys.readouterr()
+    assert output.out.strip() == "Correct! You guessed the highest word!"
+
+    mode_3_results((["test", "words"], 20), "something", 20)
+    output = capsys.readouterr()
+    assert "Correct! Other words with the same score are:" in output.out.strip()
+
+    mode_3_results((["test"], 5), "wrong", 50)
+    output = capsys.readouterr()
+    assert output.out.strip() == "Incorrect. The computer's highest score was 5.\nThe word was:\ntest"
+
+    mode_3_results((["test", "other"], 12), "", 30)
+    output = capsys.readouterr()
+    assert output.out.strip() == "Incorrect. The computer's highest score was 12.\nThe words are:\ntest\nother"
 
 
 def test_tiles_remaining():
