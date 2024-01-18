@@ -2,10 +2,11 @@ import pytest
 from project import Tile, ready_input, user_input_word, is_valid, longest_words, generate_letters_tiles, generate_letters_random, calculate_word_score, highest_point_words, all_words_list
 
 
-def test_ready_input():
-    # Dom - I'll take care of this one
-    pass
-
+def test_ready_input(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda _: '     q     ')
+    user_input = ready_input()
+    assert user_input == 'q'
+    
 
 def test_user_input_word():
     # Dom - I'll take care of this one
