@@ -236,6 +236,110 @@ def mode_3():
                 refill_bag(tile_instances)
 
 
+# Used in all modes
+def ready_input() -> str:
+    """
+    Asks the user if they want to do the selected mode again
+
+    :return: Users input as a string. Anything except only 'q' will continue the practice
+    """
+    print()
+    r_input = input("Press Enter when ready to generate letters. "
+                    "The '?' counts as any letter. "
+                    "Enter 'q' to quit: ").strip()
+    if r_input.lower() == 'q':
+        print("Returning to practice mode menu...")
+    return r_input
+
+
+# Used in modes 1 and 2
+def generate_letters_random(amount: int = 7) -> str:
+    """
+    Generate a string of random letters.
+    ? represents blank tiles which can be used as any letter
+
+    :param amount: Number of letters to return
+    :return: A string of letters that are to be used to make words
+    """
+    alphabet = 'abcdefghijklmnopqrstuvwxyz?'
+    return ''.join(random.sample(alphabet, amount))
+
+
+# Used in modes 1 and 2
+def longest_words(letters: str) -> list | str:
+    """
+    Creates a list of the longest words based on available letters, or says if there are no valid words
+
+    :param letters: Available letters to make words from
+    :return: A list of longest words, or a string saying no words can be made
+    """
+    word_list = all_words_list(letters)
+
+    if word_list:
+        max_len = len(max(word_list, key=len))
+        max_words = [word for word in word_list if len(word) == max_len]
+        return max_words
+    else:
+        return "No valid word found."
+    
+
+# Used in longest_words() and highest_point_words()
+def all_words_list(letters: str) -> list:
+    """
+    Uses twl.anagram() to return a list of all Scrabble words that can be made from the letters.
+    Considers ? to represent any letter.
+    """
+    available_words_list = []
+    for word in twl.anagram(letters):
+        available_words_list.append(word)
+    return available_words_list
+
+
+# Used in modes 2 and 3
+def user_input_word(letters: str) -> str:
+    """
+    Asks the user to enter their guess for best word based on letters
+
+    :param letters: Available letters to make a word out of. ? represent any letter
+    :return: A string that is either "" or only has letters from `letters` param
+    """
+    while True:
+        guess = input("Enter your word (if no valid words, press Enter with no input): ").strip().lower()
+        if guess == "":
+            return guess
+        else:
+            if is_valid(guess, letters):
+                if twl.check(guess):
+                    return guess
+                else:
+                    print("Invalid word. Not in the dictionary")
+            else:
+                print("Invalid word. Use only the provided letters.")
+
+
+# Used in user_input_word()
+def is_valid(word: str, available_letters: str) -> bool:
+    """
+    Checks if the user's input is a valid word based on available letters
+
+    :param word: User's word they inputted
+    :param available_letters: Valid letters to use, ? means any letter
+    """
+    blank_tiles = available_letters.count('?')
+    for letter in word:
+        if not letter.isalpha():
+            return False
+        elif word.count(letter) > available_letters.count(letter):
+            if blank_tiles > 0:
+                blank_tiles -= 1
+                available_letters = available_letters.replace('?', letter, 1)
+                continue
+            return False
+    return True
+
+
+# All following functions are only used in Mode 3
+
 def create_tiles() -> list:
     """List of tiles to be created using Tile Class"""
     tiles_to_generate = [
@@ -268,89 +372,6 @@ def create_tiles() -> list:
         ('?', 2, 0)
     ]
     return tiles_to_generate
-
-
-def ready_input() -> str:
-    """
-    Asks the user if they want to do the selected mode again
-
-    :return: Users input as a string. Anything except only 'q' will continue the practice
-    """
-    print()
-    r_input = input("Press Enter when ready to generate letters. "
-                    "The '?' counts as any letter. "
-                    "Enter 'q' to quit: ").strip()
-    if r_input.lower() == 'q':
-        print("Returning to practice mode menu...")
-    return r_input
-
-
-def tiles_remaining(tile_instances: list) -> int:
-    """Returns total tiles left"""
-    remaining_tiles = 0
-    for tile in tile_instances:
-        remaining_tiles += tile.tile_count
-    return remaining_tiles
-        
-
-def refill_bag(tile_instances: list) -> None:
-    """Resets tiles to their max_tile_count"""
-    for tile in tile_instances:
-        tile.reset_tiles()
-    print("Refilling bag...")
-
-
-def user_input_word(letters: str) -> str:
-    """
-    Asks the user to enter their guess for best word based on letters
-
-    :param letters: Available letters to make a word out of. ? represent any letter
-    :return: A string that is either "" or only has letters from `letters` param
-    """
-    while True:
-        guess = input("Enter your word (if no valid words, press Enter with no input): ").strip().lower()
-        if guess == "":
-            return guess
-        else:
-            if is_valid(guess, letters):
-                if twl.check(guess):
-                    return guess
-                else:
-                    print("Invalid word. Not in the dictionary")
-            else:
-                print("Invalid word. Use only the provided letters.")
-
-
-def is_valid(word: str, available_letters: str) -> bool:
-    """
-    Checks if the user's input is a valid word based on available letters
-
-    :param word: User's word they inputted
-    :param available_letters: Valid letters to use, ? means any letter
-    """
-    blank_tiles = available_letters.count('?')
-    for letter in word:
-        if not letter.isalpha():
-            return False
-        elif word.count(letter) > available_letters.count(letter):
-            if blank_tiles > 0:
-                blank_tiles -= 1
-                available_letters = available_letters.replace('?', letter, 1)
-                continue
-            return False
-    return True
-
-
-def generate_letters_random(amount: int = 7) -> str:
-    """
-    Generate a string of random letters.
-    ? represents blank tiles which can be used as any letter
-
-    :param amount: Number of letters to return
-    :return: A string of letters that are to be used to make words
-    """
-    alphabet = 'abcdefghijklmnopqrstuvwxyz?'
-    return ''.join(random.sample(alphabet, amount))
 
 
 def generate_letters_tiles(tile_instances: list, amount: int = 7) -> str:
@@ -397,8 +418,8 @@ def highest_point_words(letters: str, tile_instances: list) -> tuple | str:
     """
     max_score = 0
     best_words = []
-
     word_list = all_words_list(letters)
+
     if word_list:
         for word in word_list:
             current_score = calculate_word_score(word, tile_instances)
@@ -413,32 +434,19 @@ def highest_point_words(letters: str, tile_instances: list) -> tuple | str:
         return "No valid word found."
 
 
-def longest_words(letters: str) -> list | str:
-    """
-    Creates a list of the longest words based on available letters, or says if there are no valid words
+def tiles_remaining(tile_instances: list) -> int:
+    """Returns total tiles left"""
+    remaining_tiles = 0
+    for tile in tile_instances:
+        remaining_tiles += tile.tile_count
+    return remaining_tiles
+        
 
-    :param letters: Available letters to make words from
-    :return: A list of longest words, or a string saying no words can be made
-    """
-    word_list = all_words_list(letters)
-
-    if word_list:
-        max_len = len(max(word_list, key=len))
-        max_words = [word for word in word_list if len(word) == max_len]
-        return max_words
-    else:
-        return "No valid word found."
-    
-
-def all_words_list(letters: str) -> list:
-    """
-    Uses twl.anagram() to return a list of all Scrabble words that can be made from the letters.
-    Considers ? to represent any letter.
-    """
-    available_words_list = []
-    for word in twl.anagram(letters):
-        available_words_list.append(word)
-    return available_words_list
+def refill_bag(tile_instances: list) -> None:
+    """Resets tiles to their max_tile_count"""
+    for tile in tile_instances:
+        tile.reset_tiles()
+    print("Refilling bag...")
 
 
 if __name__ == "__main__":
