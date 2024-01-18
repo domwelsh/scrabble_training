@@ -144,27 +144,7 @@ def mode_2():
         guess = user_input_word(letters)
         correct_words = longest_words(letters)
 
-        # Printing correct response based on if there were any valid words,
-        # if there was only 1 longest word or if there were more than 1,
-        # and if user guessed a word that was the longest length 
-        if isinstance(correct_words, str) and guess == "":
-            print(f"Correct. {correct_words}")
-        elif isinstance(correct_words, str) and guess != "":
-            print(f"Incorrect. {correct_words}")
-        elif len(guess) == len(correct_words):
-            if len(correct_words) == 1:
-                print("Correct! You found the longest word.")
-            else:
-                print("Correct! You found one of the longest words. The other longest words are:")
-                for w in correct_words:
-                    print(w)
-        else:
-            if len(correct_words) == 1:
-                print(f"Incorrect. The longest word is: {correct_words[0]}")
-            else:
-                print(f"Incorrect. The longest words are:")
-                for w in correct_words:
-                    print(w)
+        mode_2_results(correct_words, guess)
 
 
 def mode_3():
@@ -198,34 +178,8 @@ def mode_3():
 
         highest_score_words = highest_point_words(only_letters, tile_instances)
 
-        # Printing correct response based on if there were any valid words,
-        # if there was only 1 highest scoring word or if there were more than 1,
-        # and if user guessed a word that was the highest score
-        if isinstance(highest_score_words, str) and guess == "":
-            print(f"Correct! {highest_score_words}")
-        elif isinstance(highest_score_words, str) and guess != "":
-            print(f"Incorrect. {highest_score_words}")
-        else:
-            highest_words = highest_score_words[0]
-            highest_score = highest_score_words[1]
-            if guess == highest_score:
-                if len(highest_words) == 1:
-                    print(f"Correct! You guessed the highest word!")
-                else:
-                    print(f"Correct! Other words with the same score are:")
-                    for word in highest_words:
-                        print(word)
-            else:
-                print(f"Incorrect. The computer's highest score was {highest_score}.")
-                if len(highest_words) == 1:
-                    print(f"The word was:")
-                    print(highest_words[0])
-                else:
-                    print(f"The words are:")
-                    for word in highest_words:
-                        print(word)
+        mode_3_results(highest_score_words, guess, total_score)
             
-
         # Option to reset tiles
         tiles_in_bag = tiles_remaining(tile_instances)
         if tiles_in_bag < 7:
@@ -340,6 +294,34 @@ def is_valid(word: str, available_letters: str) -> bool:
     return True
 
 
+# Used in mode 2
+def mode_2_results(correct_words: str | list, guess: str) -> None:
+    """
+    Prints response based on if there are valid words and if the user guessed correctly
+
+    :param correct_words: Either a string saying there a no valid words, or a list of longest words
+    :param guess: The user's guess for longest word
+    """
+    if isinstance(correct_words, str) and guess == "":
+        print(f"Correct. {correct_words}")
+    elif isinstance(correct_words, str) and guess != "":
+        print(f"Incorrect. {correct_words}")
+    elif len(guess) == len(correct_words[0]):
+        if len(correct_words) == 1:
+            print("Correct! You found the longest word.")
+        else:
+            print("Correct! You found one of the longest words. The other longest words are:")
+            for w in correct_words:
+                print(w)
+    else:
+        if len(correct_words) == 1:
+            print(f"Incorrect. The longest word is: {correct_words[0]}")
+        else:
+            print(f"Incorrect. The longest words are:")
+            for w in correct_words:
+                print(w)
+
+
 # All following functions are only used in Mode 3
 
 def create_tiles() -> list:
@@ -434,6 +416,38 @@ def highest_point_words(letters: str, tile_instances: list) -> tuple | str:
         return best_words, max_score
     else:
         return "No valid word found."
+
+
+def mode_3_results(highest_score_words: str | tuple, guess: str, user_score: int) -> None:
+    """
+    Prints response based on if there are valid words and if the user guessed correctly
+
+    :param highest_score_words: Either a string saying there a no valid words, or a list of words with highest score
+    :param guess: The user's guess for highest scoring word
+    """
+    if isinstance(highest_score_words, str) and guess == "":
+        print(f"Correct! {highest_score_words}")
+    elif isinstance(highest_score_words, str) and guess != "":
+        print(f"Incorrect. {highest_score_words}")
+    else:
+        highest_words = highest_score_words[0]
+        highest_score = highest_score_words[1]
+        if user_score == highest_score:
+            if len(highest_words) == 1:
+                print(f"Correct! You guessed the highest word!")
+            else:
+                print(f"Correct! Other words with the same score are:")
+                for word in highest_words:
+                    print(word)
+        else:
+            print(f"Incorrect. The computer's highest score was {highest_score}.")
+            if len(highest_words) == 1:
+                print(f"The word was:")
+                print(highest_words[0])
+            else:
+                print(f"The words are:")
+                for word in highest_words:
+                    print(word)
 
 
 def tiles_remaining(tile_instances: list) -> int:
