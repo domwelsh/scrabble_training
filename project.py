@@ -308,7 +308,7 @@ def user_input_word(letters: str) -> str:
     :return: A string that is either "" or only has letters from `letters` param
     """
     while True:
-        guess = input("Enter your word (if no valid words, press Enter with no input): ").strip()
+        guess = input("Enter your word (if no valid words, press Enter with no input): ").strip().lower()
         if guess == "":
             return guess
         else:
