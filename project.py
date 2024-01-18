@@ -361,11 +361,11 @@ def generate_letters_tiles(tile_instances: list, amount: int = 7) -> str:
     """
     weighted_letters = ''.join(tile.letter * tile.tile_count for tile in tile_instances if not tile.is_empty())
     selected_letters = ''.join(random.sample(weighted_letters, amount))
-    tiles_withdrawn(selected_letters, tile_instances)
+    multiple_tiles_withdrawn(selected_letters, tile_instances)
     return selected_letters
 
 
-def tiles_withdrawn(letters: str, tile_instances: list) -> None:
+def multiple_tiles_withdrawn(letters: str, tile_instances: list) -> None:
     """Reduce the tile count of used letters"""
     for letter in letters:
         for tile in tile_instances:
