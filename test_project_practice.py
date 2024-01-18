@@ -43,3 +43,13 @@ def test_tile_negative_tile_count():
 def test_tile_negative_points_value():
     with pytest.raises(ValueError, match="Points cannot be negative"):
         Tile('a', 5, -2)
+
+def test_tile_withdrawn_zero_count():
+    # Create a Tile instance with tile_count set to 0
+    tile = Tile('a', 0, 1)
+    # Attempt to withdraw a tile
+    tile.tiles_withdrawn()
+    # Ensure that the tile_count remains 0
+    assert tile.tile_count == 0
+    # Ensure that is_empty still returns True
+    assert tile.is_empty()
