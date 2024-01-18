@@ -83,7 +83,7 @@ class Tile:
 
 
 def main():
-    print("Welcome to English Scrabble Practice!")
+    print("Welcome to English Scrabble Training!")
     user_choice = None
 
     while True:
