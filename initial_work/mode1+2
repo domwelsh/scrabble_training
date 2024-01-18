@@ -1,0 +1,107 @@
+import random
+import nltk
+
+nltk.download('words')
+from nltk.corpus import words
+
+def main():
+    print("Welcome to English Scrabble Practice!")
+    print("Select a mode:")
+    print("1. Practice Mode (Computer generates letters)")
+    print("2. Practice Mode (User enters their word)")
+    print("3. Quit")
+
+    user_choice = input("Enter the mode number: ")
+
+    if user_choice == '1':
+        mode_1()
+    elif user_choice == '2':
+        mode_2()
+    elif user_choice == '3':
+        print("Thanks for playing! Goodbye.")
+    else:
+        print("Invalid choice. Please try again.")
+        main()
+
+def mode_1():
+    print("Entering Practice Mode 1...")
+    while True:
+        ready_input = input("Press Enter when ready to generate letters. Enter 'q' to quit: ")
+
+        if ready_input.lower() == 'q':
+            print("Exiting Practice Mode 1...")
+            break
+
+        letters = no_points_generate_letters()
+        print("Generated Letters:", ' '.join(letters))
+        
+        input("Press Enter to reveal the longest word.")
+        
+        word = longest_word(letters)
+        print("Longest Word:", word)
+
+        user_input = input("Enter 'q' to quit, or press Enter to continue: ")
+        if user_input.lower() == 'q':
+            print("Exiting Practice Mode 1...")
+            break
+
+def mode_2():
+    print("Entering Practice Mode 2...")
+    while True:
+        ready_input = input("Press Enter when ready to generate letters. Enter 'q' to quit: ")
+
+        if ready_input.lower() == 'q':
+            print("Exiting Practice Mode 2...")
+            break
+
+        letters = no_points_generate_letters()
+        print("Generated Letters:", ' '.join(letters))
+        
+        guess = user_input_word(letters)
+        correct_word = longest_word(letters)
+
+        if len(guess) == len(correct_word) and guess.lower() == correct_word.lower():
+            print("Correct! You found the longest word.")
+        else:
+            print(f"Incorrect. The longest word is: {correct_word}")
+
+        reset_tiles()
+
+        user_input_continue = input("Enter 'q' to quit, or press Enter to continue: ")
+        if user_input_continue.lower() == 'q':
+            print("Exiting Practice Mode 2...")
+            break
+
+def reset_tiles():
+    # Additional function to reset the tiles, if needed
+    print("Resetting tiles...")
+
+def user_input_word(letters):
+    while True:
+        guess = input("Enter your word: ")
+        if is_valid(guess, letters):
+            return guess
+        else:
+            print("Invalid word. Use only the provided letters.")
+
+def is_valid(word, available_letters):
+    for letter in word:
+        if word.count(letter) > available_letters.count(letter):
+            return False
+    return True
+
+def no_points_generate_letters(amount=7):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    return random.sample(alphabet, amount)
+
+def longest_word(letters):
+    english_word_list = set(words.words())
+    valid_words = [word for word in english_word_list if is_valid(word, letters)]
+
+    if valid_words:
+        return max(valid_words, key=len)
+    else:
+        return "No valid word found."
+
+if __name__ == "__main__":
+    main()
